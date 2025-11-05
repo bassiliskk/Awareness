@@ -36,6 +36,60 @@
   /* slogan */
   .slogan{text-align:center;margin-top:2rem;font-size:1.4rem;font-weight:800;letter-spacing:.05em;background:linear-gradient(135deg,var(--p-red),var(--s-gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 </style>
+<style>
+  :root {
+    --fab-raise: 0px; /* dynamic lift when near footer/sources */
+  }
+
+  /* Keep fabs above iPhone home bar & add dynamic raise */
+  top-btn, next-btn {
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px) + var(--fab-raise));
+  }
+
+  /* Prevent overlap: give extra bottom breathing room to the last sections */
+  .sources, footer {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Mobile tweaks: keep next button to the right to avoid center overlap */
+  @media (max-width: 640px) {
+    next-btn {
+      left: auto;
+      right: 1rem;
+      translate: 0 0;          /* cancel the translate(-50%) set in some files */
+      max-width: 80vw;         /* avoid covering wide areas */
+      text-align: center;
+      white-space: nowrap;
+    }
+    top-btn {
+      right: 1rem;
+    }
+  }
+</style>
+<!-- BEGIN: desktop-overlap-fix CSS -->
+<style>
+  /* Desktop-specific positioning and extra breathing room */
+  @media (min-width: 1024px) {
+    :root{
+      /* how much to lift buttons when footer/sources are visible */
+      --fab-lift-desktop: 110px;
+    }
+    /* keep Next button on the right on wide screens */
+    next-btn{
+      left: auto !important;
+      right: 1.25rem !important;
+      translate: 0 0 !important;   /* cancels any center translate */
+      max-width: 40vw;              /* prevents super-wide overlay */
+    }
+    /* a bit more bottom padding so nothing gets covered on tall footers */
+    .sources, footer{
+      padding-bottom: calc(8rem + env(safe-area-inset-bottom, 0px));
+    }
+  }
+</style>
+<!-- END: desktop-overlap-fix CSS -->
+
+
 </head>
 <body>
 
@@ -60,7 +114,8 @@
     <div class="share-card">
       <h3>1. Copy Link</h3>
       <p>Tap below, paste everywhere—group chats, bios, comments.</p>
-     <button class="btn-share" onclick="navigator.clipboard.writeText('https://bassiliskk.github.io/Awareness/');alert('Link copied!')">Copy Site URL</button>
+      <button class="btn-share" onclick="navigator.clipboard.writeText('https://bassiliskk.github.io/Awareness/');alert('Link copied!')">Copy Site URL</button>
+    </div>
     <div class="share-card">
       <h3>2. Offline Word</h3>
       <p>Print QR code, slap it on campus boards, mosque doors, café windows.</p>
@@ -87,6 +142,33 @@
   window.onscroll=()=>topBtn.classList.toggle('visible',window.scrollY>600);
   topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
 </script>
-</body>
+<script>
+  // Lift floating buttons when footer or sources are visible
+  (function () {
+    const root = document.documentElement;
+   const mqDesktop = matchMedia('(min-width:1024px)');
+const bump = (on) => {
+  const lift = mqDesktop.matches ? getComputedStyle(document.documentElement).getPropertyValue('--fab-lift-desktop') || '110px'
+                                 : '72px';
+  document.documentElement.style.setProperty('--fab-raise', on ? lift.trim() : '0px');
+};
 
+    const targets = [];
+    const foot = document.querySelector('footer');
+    if (foot) targets.push(foot);
+    const srcs = document.querySelector('.sources');
+    if (srcs) targets.push(srcs);
+
+    if (targets.length) {
+      const io = new IntersectionObserver(entries => {
+        // If any of these are in view, lift the fabs
+        const anyVisible = entries.some(e => e.isIntersecting);
+        bump(anyVisible);
+      }, { threshold: 0.05 });
+      targets.forEach(t => io.observe(t));
+    }
+  }());
+</script>
+
+</body>
 </html>
