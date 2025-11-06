@@ -76,7 +76,7 @@
   @keyframes reveal { from { letter-spacing:.2em; opacity:0; clip-path: inset(100% 0 0 0); } to { letter-spacing:.02em; opacity:1; clip-path: inset(0 0 0 0); } }
   @keyframes fadeUp { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
 
-  /* === NEW: Red box with three nav buttons under the hero === */
+  /* === Red box with three nav buttons under the hero === */
   .cta-box{
     display:flex; gap:.6rem; align-items:center; justify-content:center;
     background:#ce1126; padding:.55rem; border-radius:14px;
@@ -92,13 +92,7 @@
   }
   .cta-btn:hover{ transform:translateY(-1px); filter:brightness(1.05); }
   .btn-pal{ background:#000; color:#fff; }         /* Palestine: black */
-  /* Sudan button: change beige -> white */
-.btn-sud{
-  background:#ffffff;   /* was #e9ddc8 */
-  color:#201a12;
-  /* keep the rest the same */
-}
-
+  .btn-sud{ background:#ffffff; color:#201a12; }   /* Sudan: white */
   .btn-share{ background:#007a3d; color:#fff; }    /* Share: green */
   @media (max-width:560px){
     .cta-box{flex-wrap:wrap; gap:.5rem}
@@ -170,9 +164,28 @@
 
   /* keep bottom padding to avoid overlap with floating buttons */
   .sources, footer{ padding-bottom: calc(8rem + env(safe-area-inset-bottom, 0px)); }
-</style>
 
-<!-- (Optional) Old .connect styles can remain or be removed; not used now -->
+  /* === NEW: bottom black button to Palestine === */
+  .bottom-nav-btn{
+    display:flex; justify-content:center; margin-top:40px;
+    opacity:0; transform:translateY(18px);
+  }
+  .bottom-nav-btn.in{
+    opacity:1; transform:none;
+    transition:opacity .65s var(--ease), transform .65s var(--ease);
+  }
+  .btn-black{
+    background:#000; color:#fff; text-decoration:none; font-weight:900;
+    padding:.9rem 1.6rem; border-radius:999px; border:1px solid rgba(255,255,255,.12);
+    display:inline-flex; align-items:center; gap:.5rem;
+    box-shadow:0 10px 26px rgba(0,0,0,.3);
+    transition:transform .22s ease, box-shadow .22s ease;
+  }
+  .btn-black:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 36px rgba(0,0,0,.35);
+  }
+</style>
 
 </head>
 <body>
@@ -195,7 +208,7 @@
       <h1 class="cutout"><span>Voices</span><span>United</span></h1>
       <p class="sub">Palestine &amp; Sudan – humanity under fire</p>
 
-      <!-- NEW: small red box with three specific nav buttons -->
+      <!-- small red box with three specific nav buttons -->
       <div class="cta-box">
         <a class="cta-btn btn-pal" href="palestine.html">Palestine</a>
         <a class="cta-btn btn-sud" href="sudan.html">Sudan</a>
@@ -237,6 +250,11 @@
         </figure>
       </article>
     </div>
+
+    <!-- NEW: bottom navigation button to Palestine -->
+    <div class="bottom-nav-btn">
+      <a href="palestine.html" class="btn-black">Go to Palestine →</a>
+    </div>
   </div>
 </div>
 
@@ -273,9 +291,9 @@
     topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
   })();
 
-  // Scroll-reveal: include cards + new cta-box
+  // Scroll-reveal: include cards + cta-box + bottom button
   (function(){
-    const cards = document.querySelectorAll('.card, .reveal-up, .cta-box');
+    const cards = document.querySelectorAll('.card, .reveal-up, .cta-box, .bottom-nav-btn');
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{
         if(e.isIntersecting){
