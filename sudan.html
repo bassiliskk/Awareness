@@ -4,168 +4,134 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sudan Deep Dive – Voices for Justice</title>
+
 <style>
-  :root{--s-red:#D21034;--s-green:#007229;--s-blue:#0020A0;--s-gold:#FFC400;--bg:#0A0A0A;--surface:#181818;--text:#F5F5F5;--muted:#777;--font:"Inter",system-ui,sans-serif;scroll-behavior:smooth}
-  *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font)}
-  body{background:var(--bg);color:var(--text);line-height:1.7}
-  img{width:100%;display:block;border-radius:6px}
-  a{color:inherit}
-  h1,h2,h3{font-weight:800;letter-spacing:-.02em}
-  header{height:60vh;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:#000}
-  header img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:zoom 30s ease forwards}
-  @keyframes zoom{to{transform:scale(1.2)}}
-  .overlay{position:absolute;inset:0;background:linear-gradient(180deg,#0004 0%,#000e 100%)}
-  .hero-content{z-index:2;padding:1.5rem}
-  h1{font-size:clamp(2rem,7vw,4rem)}
-  .back-home{position:absolute;top:1.5rem;left:1.5rem;background:#ffffff1a;padding:.5rem 1rem;border-radius:4px;font-weight:600;font-size:.9rem}
-  section{padding:3rem 1.5rem;max-width:900px;margin:auto}
-  .photo-stack{display:grid;gap:1.5rem;margin:2rem 0}
-  /* BUTTONS ONLY */
-  top-btn{position:fixed;bottom:2rem;right:2rem;width:3rem;height:3rem;border-radius:50%;background:var(--s-blue);color:#fff;display:grid;place-items:center;font-size:1.2rem;cursor:pointer;opacity:0;transform:scale(.8);transition:.3s;z-index:999}
-  top-btn.visible{opacity:1;transform:scale(1)}
-  next-btn{position:fixed;bottom:2rem;left:50%;translate:-50% 0;background:var(--s-green);color:#fff;padding:.7rem 1.4rem;border-radius:99px;font-weight:700;cursor:pointer;transition:.3s;z-index:999}
-  next-btn:hover{filter:brightness(1.15)}
-  footer{text-align:center;padding:2rem 1rem;font-size:.8rem;color:var(--muted)}
-  .sources{margin-top:3rem;text-align:center}
-  .sources a{display:inline-block;margin:.5rem .75rem;font-weight:700;font-size:.8rem;color:var(--s-gold)}
-</style>
-<style>
-  :root {
-    --fab-raise: 0px; /* dynamic lift when near footer/sources */
+  :root{
+    /* Sudan flag colors */
+    --s-red:#D21034; --s-green:#007229; --s-blue:#0020A0; --s-gold:#FFC400;
+
+    /* Base */
+    --bg:#0b0d12; --text:#F5F5F7; --muted:#AEB4C0; --surface:#111318;
+    --radius:20px; --shadow:0 24px 60px rgba(0,0,0,.36); --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;line-height:1.65;overflow-x:hidden}
+
+  /* Flag band (Sudan) */
+  .flagbar{position:fixed;inset:0 0 auto 0;height:6px;z-index:1000;
+    background:linear-gradient(90deg,var(--s-red) 25%, var(--s-white,#fff) 25% 50%, var(--s-black,#000) 50% 75%, var(--s-green) 75% 100%);
+    box-shadow:0 6px 16px rgba(0,0,0,.22);
   }
 
-  /* Keep fabs above iPhone home bar & add dynamic raise */
-  top-btn, next-btn {
-    bottom: calc(1rem + env(safe-area-inset-bottom, 0px) + var(--fab-raise));
-  }
+  /* Header */
+  header{height:62vh;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:#000;border-bottom:1px solid rgba(255,255,255,.08)}
+  header img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.1);filter:brightness(.9) saturate(1.05)}
+  .overlay{position:absolute;inset:0;background:linear-gradient(180deg,#00000066 0%,#000000b0 100%)}
+  .hero{position:relative;z-index:2;padding:1.5rem}
+  h1{font-weight:900;letter-spacing:-.015em;font-size:clamp(2.2rem,6.5vw,4rem);line-height:1.05}
+  h1 .accent{color:var(--s-gold)}
+  .back{position:absolute;top:1rem;left:1rem;background:#ffffff20;border:1px solid #ffffff30;color:#fff;padding:.5rem 1rem;border-radius:999px;font-weight:700}
 
-  /* Prevent overlap: give extra bottom breathing room to the last sections */
-  .sources, footer {
-    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
-  }
+  /* Sections */
+  .wrap{max-width:980px;margin:auto;padding:3rem 1rem}
+  section{background:var(--surface);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:1.6rem;margin:1.2rem 0;box-shadow:var(--shadow);opacity:0;transform:translateY(20px)}
+  section.in{opacity:1;transform:none;transition:opacity .7s var(--ease), transform .7s var(--ease)}
+  h2{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:900;margin-bottom:.6rem}
+  p{color:var(--text);opacity:.95}
+  .photo-stack{display:grid;gap:1rem;margin:1.2rem 0}
+  @media(min-width:800px){ .photo-stack{grid-template-columns:1fr 1fr} }
+  img{width:100%;display:block;border-radius:12px;border:1px solid rgba(255,255,255,.08)}
 
-  /* Mobile tweaks: keep next button to the right to avoid center overlap */
-  @media (max-width: 640px) {
-    next-btn {
-      left: auto;
-      right: 1rem;
-      translate: 0 0;          /* cancel the translate(-50%) set in some files */
-      max-width: 80vw;         /* avoid covering wide areas */
-      text-align: center;
-      white-space: nowrap;
-    }
-    top-btn {
-      right: 1rem;
-    }
-  }
-</style>
-<!-- BEGIN: desktop-overlap-fix CSS -->
-<style>
-  /* Desktop-specific positioning and extra breathing room */
-  @media (min-width: 1024px) {
-    :root{
-      /* how much to lift buttons when footer/sources are visible */
-      --fab-lift-desktop: 110px;
-    }
-    /* keep Next button on the right on wide screens */
-    next-btn{
-      left: auto !important;
-      right: 1.25rem !important;
-      translate: 0 0 !important;   /* cancels any center translate */
-      max-width: 40vw;              /* prevents super-wide overlay */
-    }
-    /* a bit more bottom padding so nothing gets covered on tall footers */
-    .sources, footer{
-      padding-bottom: calc(8rem + env(safe-area-inset-bottom, 0px));
-    }
+  /* Sources */
+  .sources{margin-top:2rem;text-align:center}
+  .sources a{display:inline-block;margin:.4rem .6rem;padding:.45rem .9rem;border-radius:999px;font-weight:800;background:var(--s-gold);color:#111;text-decoration:none}
+  .sources a:hover{filter:brightness(1.08)}
+
+  /* Floating buttons */
+  top-btn, next-btn{position:fixed; z-index:999; bottom:calc(1rem + env(safe-area-inset-bottom,0px) + var(--fab-raise))}
+  top-btn{right:1rem;width:48px;height:48px;border-radius:999px;display:grid;place-items:center;background:linear-gradient(135deg,#161a22,#0f131a);color:#fff;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.35);translate:0 10px;opacity:0;transition:.35s var(--ease);border:1px solid rgba(255,255,255,.08)}
+  top-btn.visible{translate:0 0;opacity:1}
+  next-btn{right:calc(1rem + 52px + .6rem);background:var(--s-green);color:#fff;padding:.7rem 1.1rem;border-radius:999px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.12);transition:transform .25s var(--ease), box-shadow .25s var(--ease)}
+  next-btn:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(0,0,0,.3)}
+  :root{--fab-raise:0px}
+  .sources, footer{padding-bottom:calc(8rem + env(safe-area-inset-bottom,0px))}
+  @media (max-width:640px){ next-btn{left:auto; right:1rem; translate:0 0; max-width:80vw; white-space:nowrap} top-btn{right:1rem} }
+  @media (min-width:1024px){ :root{--fab-lift-desktop:110px} }
+
+  /* Directional reveal (desktop) */
+  @media(min-width:900px){
+    .reveal-left{transform:translateX(-28px); opacity:0}
+    .reveal-right{transform:translateX(28px); opacity:0}
+    .reveal-left.in,.reveal-right.in{transform:none;opacity:1}
   }
 </style>
-<!-- END: desktop-overlap-fix CSS -->
-
-
 </head>
 <body>
+
+<div class="flagbar" aria-hidden="true"></div>
 
 <header>
   <img src="https://www.aljazeera.com/wp-content/uploads/2025/04/AFP__20250414__429F266__v1__HighRes__SudanConflictDisplaced-1744705214.jpg?resize=1920%2C1440" alt="Sudan displaced">
   <div class="overlay"></div>
-  <a class="back-home" href="index.html">← Home</a>
-  <div class="hero-content">
-    <h1>Sudan 2025<br><span style="color:var(--s-gold)">Catastrophic War</span></h1>
+  <a class="back" href="index.html">← Home</a>
+  <div class="hero">
+    <h1>Sudan 2025<br><span class="accent">Catastrophic War</span></h1>
   </div>
 </header>
 
-<section>
-  <h2>El-Fasher Falls</h2>
-  <p>After a prolonged siege the Rapid Support Forces seized El-Fasher, the last major SAF stronghold in North Darfur.  Civilians were caught in cross-fire and thousands fled eastward under artillery fire and without water or shelter.</p>
-  <div class="photo-stack">
-    <img src="https://www.economist.com/cdn-cgi/image/width=1424,quality=80,format=auto/content-assets/images/20251101_MAP505.jpg" alt="Economist map">
-    <img src="https://www.aljazeera.com/wp-content/uploads/2025/10/afp_68ff76a4b091-1761572516.jpg?quality=80&resize=730%2C410" alt="Fleeing civilians">
+<div class="wrap">
+  <!-- El-Fasher -->
+  <section class="reveal-left">
+    <h2>El-Fasher Falls</h2>
+    <p>After a prolonged siege the Rapid Support Forces seized El-Fasher, the last major SAF stronghold in North Darfur. Civilians were caught in cross-fire and thousands fled eastward under artillery fire and without water or shelter.</p>
+    <div class="photo-stack">
+      <img src="https://www.economist.com/cdn-cgi/image/width=1424,quality=80,format=auto/content-assets/images/20251101_MAP505.jpg" alt="Economist map">
+      <img src="https://www.aljazeera.com/wp-content/uploads/2025/10/afp_68ff76a4b091-1761572516.jpg?quality=80&resize=730%2C410" alt="Fleeing civilians">
+    </div>
+  </section>
+
+  <!-- Famine -->
+  <section class="reveal-right">
+    <h2>Famine Confirmed by UN</h2>
+    <p>On 1 November 2025 the Integrated Food-Security Phase Classification (IPC) officially classified Zamzam camp and parts of Kordofan as IPC 5 (Famine). At least 755,000 people are now facing starvation and aid trucks are still being looted at checkpoints.</p>
+    <img src="https://www.aljazeera.com/wp-content/uploads/2025/10/reuters_6901aecc-1761717964.jpg?quality=80&resize=770%2C513" alt="Malnourished child">
+  </section>
+
+  <!-- Displacement -->
+  <section class="reveal-left">
+    <h2>Displacement Crisis</h2>
+    <p>More than 8 million Sudanese are internally displaced; another 2 million have fled to Chad, South Sudan and Egypt. The world’s largest displacement crisis is unfolding with minimal media attention and only 38% of the UN appeal funded.</p>
+    <img src="https://www.aljazeera.com/wp-content/uploads/2025/10/reuters_6901ace7-1761717479.jpg?quality=80&resize=770%2C513" alt="Displacement camp">
+  </section>
+
+  <!-- Sources -->
+  <div class="sources">
+    <a href="https://www.aljazeera.com/news/2025/10/29/massacre-in-el-fasher-whats-happening-in-sudan-right-now" target="_blank" rel="noopener">Al-Jazeera El-Fasher</a>
+    <a href="https://www.aljazeera.com/news/2025/11/3/thousands-more-flee-as-sudan-conflict-grinds-eastwards" target="_blank" rel="noopener">AJ Famine</a>
+    <a href="https://www.cfr.org/global-conflict-tracker/conflict/power-struggle-sudan" target="_blank" rel="noopener">CFR Tracker</a>
   </div>
-
-  <h2>Famine Confirmed by UN</h2>
-  <p>On 1 November 2025 the Integrated Food-Security Phase Classification (IPC) officially classified Zamzam camp and parts of Kordofan as IPC 5 (Famine).  At least 755,000 people are now facing starvation and aid trucks are still being looted at checkpoints.</p>
-  <img src="https://www.aljazeera.com/wp-content/uploads/2025/10/reuters_6901aecc-1761717964.jpg?quality=80&resize=770%2C513" alt="Malnourished child">
-
-  <h2>Displacement Crisis</h2>
-  <p>More than 8 million Sudanese are internally displaced; another 2 million have fled to Chad, South Sudan and Egypt.  The world’s largest displacement crisis is unfolding with minimal media attention and only 38% of the UN appeal funded.</p>
-  <img src="https://www.aljazeera.com/wp-content/uploads/2025/10/reuters_6901ace7-1761717479.jpg?quality=80&resize=770%2C513" alt="Displacement camp">
-</section>
-
-<!-- SOURCES -->
-<div class="sources">
-  <a href="https://www.aljazeera.com/news/2025/10/29/massacre-in-el-fasher-whats-happening-in-sudan-right-now" target="_blank" rel="noopener">Al-Jazeera El-Fasher report</a>
-  <a href="https://www.aljazeera.com/news/2025/11/3/thousands-more-flee-as-sudan-conflict-grinds-eastwards" target="_blank" rel="noopener">Al-Jazeera famine coverage</a>
-  <a href="https://www.cfr.org/global-conflict-tracker/conflict/power-struggle-sudan" target="_blank" rel="noopener">Council on Foreign Relations</a>
 </div>
 
-<top-btn>↑</top-btn>
-<next-btn></next-btn>
+<top-btn aria-label="Back to top">↑</top-btn>
+<next-btn aria-label="Next page"></next-btn>
 
 <script>
-(()=>{
-  const route=['index.html','palestine.html','sudan.html','share.html'];
-  const file=location.pathname.split('/').pop() || 'index.html';
-  const idx=route.indexOf(file);
-  const nextPage=route[(idx+1)%route.length];
-  const nextBtn=document.querySelector('next-btn');
-  nextBtn.textContent=(nextPage==='index.html')?'Home →':nextPage.replace('.html','')+' →';
-  nextBtn.onclick=()=>location.href=nextPage;
-  const topBtn=document.querySelector('top-btn');
-  window.onscroll=()=>{
-    topBtn.classList.toggle('visible',window.scrollY>600);
-  };
-  topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
-})();
+  // Parallax
+  (()=>{ const img=document.querySelector('header img'); addEventListener('scroll',()=>{ img.style.transform=`translateY(${scrollY*-0.06}px) scale(1.1)` },{passive:true}); })();
+
+  // Reveal
+  (()=>{ const els=document.querySelectorAll('section'); const io=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} })},{threshold:.12, rootMargin:"0px 0px -10% 0px"}); els.forEach(el=>io.observe(el)); })();
+
+  // Next + Top
+  (()=>{ const route=['index.html','palestine.html','sudan.html','share.html']; const f=location.pathname.split('/').pop()||'sudan.html'; const i=route.indexOf(f); const next=route[(i+1)%route.length];
+    const nb=document.querySelector('next-btn'); nb.textContent=(next==='index.html')?'Home →':next.replace('.html','')+' →'; nb.onclick=()=>location.href=next;
+    const tb=document.querySelector('top-btn'); addEventListener('scroll',()=>tb.classList.toggle('visible',scrollY>500),{passive:true}); tb.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+  })();
+
+  // Lift fabs near footer/sources
+  (()=>{ const root=document.documentElement, mq=matchMedia('(min-width:1024px)'); const bump=on=>root.style.setProperty('--fab-raise', on?(mq.matches?'110px':'72px'):'0px');
+    const t=[...document.querySelectorAll('footer,.sources')]; if(t.length){ const io=new IntersectionObserver(es=>bump(es.some(e=>e.isIntersecting)),{threshold:.05}); t.forEach(x=>io.observe(x)); }
+  })();
 </script>
-<script>
-  // Lift floating buttons when footer or sources are visible
-  (function () {
-    const root = document.documentElement;
-    const mqDesktop = matchMedia('(min-width:1024px)');
-const bump = (on) => {
-  const lift = mqDesktop.matches ? getComputedStyle(document.documentElement).getPropertyValue('--fab-lift-desktop') || '110px'
-                                 : '72px';
-  document.documentElement.style.setProperty('--fab-raise', on ? lift.trim() : '0px');
-};
-
-
-    const targets = [];
-    const foot = document.querySelector('footer');
-    if (foot) targets.push(foot);
-    const srcs = document.querySelector('.sources');
-    if (srcs) targets.push(srcs);
-
-    if (targets.length) {
-      const io = new IntersectionObserver(entries => {
-        // If any of these are in view, lift the fabs
-        const anyVisible = entries.some(e => e.isIntersecting);
-        bump(anyVisible);
-      }, { threshold: 0.05 });
-      targets.forEach(t => io.observe(t));
-    }
-  }());
-</script>
-
 </body>
 </html>
