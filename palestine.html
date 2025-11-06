@@ -4,168 +4,164 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Palestine Deep Dive – Voices for Justice</title>
+
 <style>
-  :root{--p-red:#CE1126;--p-green:#007A3D;--bg:#0A0A0A;--surface:#181818;--text:#F5F5F5;--muted:#777;--font:"Inter",system-ui,sans-serif;scroll-behavior:smooth}
-  *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font)}
-  body{background:var(--bg);color:var(--text);line-height:1.7}
-  img{width:100%;display:block;border-radius:6px}
-  a{color:inherit}
-  h1,h2,h3{font-weight:800;letter-spacing:-.02em}
-  header{height:60vh;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:#000}
-  header img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:zoom 30s ease forwards}
-  @keyframes zoom{to{transform:scale(1.2)}}
-  .overlay{position:absolute;inset:0;background:linear-gradient(180deg,#0004 0%,#000e 100%)}
-  .hero-content{z-index:2;padding:1.5rem}
-  h1{font-size:clamp(2rem,7vw,4rem)}
-  .back-home{position:absolute;top:1.5rem;left:1.5rem;background:#ffffff1a;padding:.5rem 1rem;border-radius:4px;font-weight:600;font-size:.9rem}
-  section{padding:3rem 1.5rem;max-width:900px;margin:auto}
-  .photo-stack{display:grid;gap:1.5rem;margin:2rem 0}
-  /* BUTTONS + NEXT */
-  top-btn{position:fixed;bottom:2rem;right:2rem;width:3rem;height:3rem;border-radius:50%;background:var(--p-red);color:#fff;display:grid;place-items:center;font-size:1.2rem;cursor:pointer;opacity:0;transform:scale(.8);transition:.3s;z-index:999}
-  top-btn.visible{opacity:1;transform:scale(1)}
-  next-btn{position:fixed;bottom:2rem;left:50%;translate:-50% 0;background:var(--p-green);color:#fff;padding:.7rem 1.4rem;border-radius:99px;font-weight:700;cursor:pointer;transition:.3s;z-index:999}
-  next-btn:hover{filter:brightness(1.15)}
-  /* SOURCES */
-  .sources{margin-top:3rem;text-align:center}
-  .sources a{display:inline-block;margin:.5rem .75rem;font-weight:700;font-size:.8rem;color:var(--p-green)}
+  :root{
+    /* Palestine */
+    --p-black:#000000; --p-white:#FFFFFF; --p-green:#007A3D; --p-red:#CE1126;
+
+    /* Base theming */
+    --bg:#0b0d12; --surface:#111318; --text:#F5F5F7; --muted:#AEB4C0;
+    --panel:#141821; --radius:20px; --shadow:0 24px 60px rgba(0,0,0,.36);
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;line-height:1.65;overflow-x:hidden}
+
+  /* Flag band (Palestine) */
+  .flagbar{position:fixed;inset:0 0 auto 0;height:6px;z-index:1000;
+    background:linear-gradient(90deg,var(--p-black) 25%, var(--p-white) 25% 50%, var(--p-green) 50% 75%, var(--p-red) 75% 100%);
+    box-shadow:0 6px 16px rgba(0,0,0,.22);
+  }
+
+  /* Header hero (parallax bg + overlay) */
+  header{
+    height:62vh;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;
+    background:#000;border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  header img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.1);filter:brightness(.9) saturate(1.05)}
+  .overlay{position:absolute;inset:0;background:linear-gradient(180deg,#00000066 0%,#000000b0 100%)}
+  .hero{position:relative;z-index:2;padding:1.5rem}
+  h1{font-weight:900;letter-spacing:-.015em;font-size:clamp(2.2rem,6.5vw,4rem);line-height:1.05}
+  h1 .accent{color:var(--p-green)}
+  .back{position:absolute;top:1rem;left:1rem;background:#ffffff20;border:1px solid #ffffff30;color:#fff;padding:.5rem 1rem;border-radius:999px;font-weight:700}
+
+  /* Page container */
+  .wrap{max-width:980px;margin:auto;padding:3rem 1rem}
+  section{background:var(--surface);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);
+    padding:1.6rem;margin:1.2rem 0;box-shadow:var(--shadow);opacity:0;transform:translateY(20px);
+  }
+  section.in{opacity:1;transform:none;transition:opacity .7s var(--ease), transform .7s var(--ease)}
+  h2{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:900;margin-bottom:.6rem}
+  p{color:var(--text);opacity:.95}
+  .photo-stack{display:grid;gap:1rem;margin:1.2rem 0}
+  @media(min-width:800px){ .photo-stack{grid-template-columns:1fr 1fr} }
+  img{width:100%;display:block;border-radius:12px;border:1px solid rgba(255,255,255,.08)}
+
+  /* Sources */
+  .sources{margin-top:2rem;text-align:center}
+  .sources a{display:inline-block;margin:.4rem .6rem;padding:.45rem .9rem;border-radius:999px;font-weight:800;
+    background:var(--p-green);color:#fff;text-decoration:none}
+  .sources a:hover{filter:brightness(1.1)}
+
+  /* Floating buttons */
+  top-btn, next-btn{
+    position:fixed; z-index:999; bottom:calc(1rem + env(safe-area-inset-bottom,0px) + var(--fab-raise));
+  }
+  top-btn{
+    right:1rem; width:48px; height:48px; border-radius:999px; display:grid; place-items:center;
+    background:linear-gradient(135deg,#161a22,#0f131a); color:#fff; font-weight:800;
+    box-shadow:0 10px 30px rgba(0,0,0,.35); translate:0 10px; opacity:0; transition:.35s var(--ease);
+    border:1px solid rgba(255,255,255,.08);
+  }
+  top-btn.visible{translate:0 0; opacity:1}
+  next-btn{
+    right:calc(1rem + 52px + .6rem);
+    background:var(--p-green); color:#fff; padding:.7rem 1.1rem; border-radius:999px; font-weight:800;
+    box-shadow:0 10px 30px rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.12);
+    transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  next-btn:hover{transform:translateY(-1px); box-shadow:0 14px 28px rgba(0,0,0,.3)}
+
+  /* Mobile adjustments for fabs */
+  :root{--fab-raise:0px}
+  .sources, footer{padding-bottom:calc(8rem + env(safe-area-inset-bottom,0px))}
+  @media (max-width:640px){
+    next-btn{left:auto; right:1rem; translate:0 0; max-width:80vw; white-space:nowrap}
+    top-btn{right:1rem}
+  }
+  @media (min-width:1024px){ :root{--fab-lift-desktop:110px} }
+
+  /* Directional reveal (desktop) */
+  @media(min-width:900px){
+    .reveal-left{transform:translateX(-28px); opacity:0}
+    .reveal-right{transform:translateX(28px); opacity:0}
+    .reveal-left.in,.reveal-right.in{transform:none;opacity:1}
+  }
 </style>
-<style>
-  :root {
-    --fab-raise: 0px; /* dynamic lift when near footer/sources */
-  }
-
-  /* Keep fabs above iPhone home bar & add dynamic raise */
-  top-btn, next-btn {
-    bottom: calc(1rem + env(safe-area-inset-bottom, 0px) + var(--fab-raise));
-  }
-
-  /* Prevent overlap: give extra bottom breathing room to the last sections */
-  .sources, footer {
-    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  /* Mobile tweaks: keep next button to the right to avoid center overlap */
-  @media (max-width: 640px) {
-    next-btn {
-      left: auto;
-      right: 1rem;
-      translate: 0 0;          /* cancel the translate(-50%) set in some files */
-      max-width: 80vw;         /* avoid covering wide areas */
-      text-align: center;
-      white-space: nowrap;
-    }
-    top-btn {
-      right: 1rem;
-    }
-  }
-</style>
-<!-- BEGIN: desktop-overlap-fix CSS -->
-<style>
-  /* Desktop-specific positioning and extra breathing room */
-  @media (min-width: 1024px) {
-    :root{
-      /* how much to lift buttons when footer/sources are visible */
-      --fab-lift-desktop: 110px;
-    }
-    /* keep Next button on the right on wide screens */
-    next-btn{
-      left: auto !important;
-      right: 1.25rem !important;
-      translate: 0 0 !important;   /* cancels any center translate */
-      max-width: 40vw;              /* prevents super-wide overlay */
-    }
-    /* a bit more bottom padding so nothing gets covered on tall footers */
-    .sources, footer{
-      padding-bottom: calc(8rem + env(safe-area-inset-bottom, 0px));
-    }
-  }
-</style>
-<!-- END: desktop-overlap-fix CSS -->
-
-
 </head>
 <body>
+
+<div class="flagbar" aria-hidden="true"></div>
 
 <header>
   <img src="https://www.vaticannews.va/content/dam/vaticannews/agenzie/images/reuters/2025/09/14/13/1757848603237.JPG/_jcr_content/renditions/cq5dam.thumbnail.cropped.750.422.jpeg" alt="Gaza ruins">
   <div class="overlay"></div>
-  <a class="back-home" href="index.html">← Home</a>
-  <div class="hero-content">
-    <h1>Palestine 2025<br><span style="color:var(--p-green)">Under Siege</span></h1>
+  <a class="back" href="index.html">← Home</a>
+  <div class="hero">
+    <h1>Palestine 2025<br><span class="accent">Under Siege</span></h1>
   </div>
 </header>
 
-<section>
-  <h2>Continuous Assault</h2>
-  <p>Air-strikes, artillery shelling, demolition campaigns and rampaging settler violence have not stopped.  Cease-fires collapse within days and every lull is followed by deadlier waves that flatten entire city blocks and bury families under the rubble of their own homes.</p>
-  <div class="photo-stack">
-    <img src="https://www.aljazeera.com/wp-content/uploads/2025/10/2025-10-04T084224Z_501285275_RC2V4HAN5XA3_RTRMADP_3_ISRAEL-PALESTINIANS-GAZA-TRUMP-1759568691.jpg?fit=1170%2C743&quality=80" alt="Air-strike flash">
-    <img src="https://cdn.cloud.prio.org/images/1725a145993642f9b94c3e934129d51b.jpg?ho=0&hp=Center&m=Scale&vo=0&vp=Center&x=1500&y=1000" alt="Rubble rescue">
+<div class="wrap">
+  <!-- Continuous Assault -->
+  <section class="reveal-left">
+    <h2>Continuous Assault</h2>
+    <p>Air-strikes, artillery shelling, demolition campaigns and rampaging settler violence have not stopped. Cease-fires collapse within days and every lull is followed by deadlier waves that flatten entire city blocks and bury families under the rubble of their own homes.</p>
+    <div class="photo-stack">
+      <img src="https://www.aljazeera.com/wp-content/uploads/2025/10/2025-10-04T084224Z_501285275_RC2V4HAN5XA3_RTRMADP_3_ISRAEL-PALESTINIANS-GAZA-TRUMP-1759568691.jpg?fit=1170%2C743&quality=80" alt="Air-strike flash">
+      <img src="https://cdn.cloud.prio.org/images/1725a145993642f9b94c3e934129d51b.jpg?ho=0&hp=Center&m=Scale&vo=0&vp=Center&x=1500&y=1000" alt="Rubble rescue">
+    </div>
+  </section>
+
+  <!-- Humanitarian Collapse -->
+  <section class="reveal-right">
+    <h2>Humanitarian Collapse</h2>
+    <p>Food, clean water, fuel and medical supplies are chronically short. Famine-like conditions have been documented by multiple UN agencies. Hospitals operate without electricity or basic medicines, forcing doctors to perform surgery by torchlight and leaving premature babies to die in incubators.</p>
+    <img src="https://www.aljazeera.com/wp-content/uploads/2025/05/2025-04-09T130041Z_1476661216_RC2LTDAIFI6D_RTRMADP_3_ISRAEL-PALESTINIANS-GAZA-HUNGER-1747048939.jpg?resize=1800%2C1800" alt="Bread line">
+  </section>
+
+  <!-- West Bank -->
+  <section class="reveal-left">
+    <h2>West-Bank Settler Violence</h2>
+    <p>2025 is already the deadliest year for West-Bank Palestinians since the Second Intifada. Settlers, often escorted by soldiers, have torched entire villages, shot live rounds at unarmed farmers and uprooted ancient olive groves that families have tended for centuries.</p>
+    <img src="https://www.aljazeera.com/wp-content/uploads/2025/01/INTERACTIVE-Israeli-settler-violence-in-the-West-Bank-1737532794.png?quality=80&resize=770%2C962&w=770" alt="Settler violence map">
+  </section>
+
+  <!-- Diplomatic -->
+  <section class="reveal-right">
+    <h2>Diplomatic Shifts</h2>
+    <p>In 2025 the UK, Australia, Canada and Spain formally recognised the State of Palestine, adding new political pressure even as daily death tolls continue to climb and families remain buried under rubble.</p>
+  </section>
+
+  <!-- Sources -->
+  <div class="sources">
+    <a href="https://www.aljazeera.com/news/liveblog/2025/11/5/live-israeli-air-attacks-shelling-demolition-campaign-hit-southern-gaza" target="_blank" rel="noopener">Al-Jazeera Live Blog</a>
+    <a href="https://www.aljazeera.com/news/2025/1/7/interactive-israeli-settler-violence-in-the-west-bank" target="_blank" rel="noopener">Settler Violence</a>
+    <a href="https://www.reuters.com/world/americas/britain-australia-canada-recognise-palestinian-state-2025-09-21/" target="_blank" rel="noopener">Reuters Recognition</a>
   </div>
-
-  <h2>Humanitarian Collapse</h2>
-  <p>Food, clean water, fuel and medical supplies are chronically short.  Famine-like conditions have been documented by multiple UN agencies.  Hospitals operate without electricity or basic medicines, forcing doctors to perform surgery by torchlight and leaving premature babies to die in incubators.</p>
-  <img src="https://www.aljazeera.com/wp-content/uploads/2025/05/AP25062380877077-1746511076.jpg?quality=80&resize=770%2C513" alt="Bread line">
-
-  <h2>West-Bank Settler Violence</h2>
-  <p>2025 is already the deadliest year for West-Bank Palestinians since the Second Intifada.  Settlers, often escorted by soldiers, have torched entire villages, shot live rounds at unarmed farmers and uprooted ancient olive groves that families have tended for centuries.</p>
-  <img src="https://www.aljazeera.com/wp-content/uploads/2025/01/INTERACTIVE-Israeli-settler-violence-in-the-West-Bank-1737532794.png?quality=80&resize=770%2C962&w=770" alt="Settler violence map">
-
-  <h2>Diplomatic Shifts</h2>
-  <p>In 2025 the UK, Australia, Canada and Spain formally recognised the State of Palestine, adding new political pressure even as daily death tolls continue to climb and families remain buried under rubble.</p>
-</section>
-
-<!-- SOURCES -->
-<div class="sources">
-  <a href="https://www.aljazeera.com/news/liveblog/2025/11/5/live-israeli-air-attacks-shelling-demolition-campaign-hit-southern-gaza" target="_blank" rel="noopener">Al-Jazeera Live Blog</a>
-  <a href="https://www.aljazeera.com/news/2025/1/7/interactive-israeli-settler-violence-in-the-west-bank" target="_blank" rel="noopener">Al-Jazeera Settler Violence</a>
-  <a href="https://www.reuters.com/world/americas/britain-australia-canada-recognise-palestinian-state-2025-09-21/" target="_blank" rel="noopener">Reuters Recognition</a>
 </div>
 
-<top-btn>↑</top-btn>
-<next-btn></next-btn>
+<top-btn aria-label="Back to top">↑</top-btn>
+<next-btn aria-label="Next page"></next-btn>
 
 <script>
-(()=>{
-  const route=['index.html','palestine.html','sudan.html','share.html'];
-  const file=location.pathname.split('/').pop() || 'index.html';
-  const idx=route.indexOf(file);
-  const nextPage=route[(idx+1)%route.length];
-  const nextBtn=document.querySelector('next-btn');
-  nextBtn.textContent=(nextPage==='index.html')?'Home →':nextPage.replace('.html','')+' →';
-  nextBtn.onclick=()=>location.href=nextPage;
-  const topBtn=document.querySelector('top-btn');
-  window.onscroll=()=>topBtn.classList.toggle('visible',window.scrollY>600);
-  topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
-})();
+  // Parallax hint (slow zoom translate)
+  (()=>{ const img=document.querySelector('header img'); addEventListener('scroll',()=>{ img.style.transform=`translateY(${scrollY*-0.06}px) scale(1.1)` },{passive:true}); })();
+
+  // Reveal on scroll
+  (()=>{ const els=document.querySelectorAll('section'); const io=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} })},{threshold:.12, rootMargin:"0px 0px -10% 0px"}); els.forEach(el=>io.observe(el)); })();
+
+  // Next + Top
+  (()=>{ const route=['index.html','palestine.html','sudan.html','share.html']; const file=location.pathname.split('/').pop()||'palestine.html'; const i=route.indexOf(file); const next=route[(i+1)%route.length];
+    const nb=document.querySelector('next-btn'); nb.textContent=(next==='index.html')?'Home →':next.replace('.html','')+' →'; nb.onclick=()=>location.href=next;
+    const tb=document.querySelector('top-btn'); addEventListener('scroll',()=>tb.classList.toggle('visible',scrollY>500),{passive:true}); tb.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+  })();
+
+  // Lift fabs near footer/sources
+  (()=>{ const root=document.documentElement, mq=matchMedia('(min-width:1024px)'); const bump=on=>root.style.setProperty('--fab-raise', on?(mq.matches?'110px':'72px'):'0px');
+    const t=[...document.querySelectorAll('footer,.sources')]; if(t.length){ const io=new IntersectionObserver(es=>bump(es.some(e=>e.isIntersecting)),{threshold:.05}); t.forEach(x=>io.observe(x)); }
+  })();
 </script>
-<script>
-  // Lift floating buttons when footer or sources are visible
-  (function () {
-    const root = document.documentElement;
-    const mqDesktop = matchMedia('(min-width:1024px)');
-const bump = (on) => {
-  const lift = mqDesktop.matches ? getComputedStyle(document.documentElement).getPropertyValue('--fab-lift-desktop') || '110px'
-                                 : '72px';
-  document.documentElement.style.setProperty('--fab-raise', on ? lift.trim() : '0px');
-};
-
-    const targets = [];
-    const foot = document.querySelector('footer');
-    if (foot) targets.push(foot);
-    const srcs = document.querySelector('.sources');
-    if (srcs) targets.push(srcs);
-
-    if (targets.length) {
-      const io = new IntersectionObserver(entries => {
-        // If any of these are in view, lift the fabs
-        const anyVisible = entries.some(e => e.isIntersecting);
-        bump(anyVisible);
-      }, { threshold: 0.05 });
-      targets.forEach(t => io.observe(t));
-    }
-  }());
-</script>
-
 </body>
 </html>
